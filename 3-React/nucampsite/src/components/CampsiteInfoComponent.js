@@ -36,7 +36,7 @@ function RenderCampsite({campsite}) {
   );
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments, postComment, campsiteId}) {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
@@ -55,10 +55,11 @@ function RenderComments({comments}) {
           </div>
         ))}
 
-        <CommentForm />
+        <CommentForm campsiteId={campsiteId} postComment={postComment} />
       </div>
     );
   }
+  return <div />;
 }
 /*
 function RenderComments({comments}) {
@@ -92,7 +93,8 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     this.toggleModal();
-    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+    //this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+    this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
   }
 
   render() {
@@ -207,7 +209,8 @@ function CampsiteInfo(props) {
               <RenderCampsite campsite={props.campsite} />
               <RenderComments 
                   comments={props.comments}
-                  addComment={props.addComment}
+                  //addComment={props.addComment}
+                  postComment={props.postComment}
                   campsiteId={props.campsite.id}
               />
           </div>
