@@ -13,13 +13,58 @@ import {
   ModalBody,
   ModalHeader
 } from "reactstrap";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || val.length <= len;
 const minLength = len => val => val && val.length >= len;
 
+function RenderCampsite({campsite}) {
+  return (
+    <div className="col-md-5 m-1">
+      <Card>
+        <CardImg top src={campsite.image} alt={campsite.name} />
+        <CardBody>
+          <CardTitle>{campsite.name}</CardTitle>
+          <CardText>{campsite.description}</CardText>
+        </CardBody>
+      </Card>
+    </div>
+  );
+}
+
+function RenderComments({comments}) {
+  if (comments) {
+    return (
+      <div className="col-md-5 m-1">
+        <h4>Comments</h4>
+        {comments.map(comment => (
+          <div key={comment.id}>
+            "<b>{comment.text}</b>"
+            <p>
+              -- <i>{comment.author}</i>,{" "}
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit"
+              }).format(new Date(Date.parse(comment.date)))}
+            </p>
+          </div>
+        ))}
+
+        <CommentForm />
+      </div>
+    );
+  }
+}
+/*
+function RenderComments({comments}) {
+  return (
+    <CommentForm campsiteId={campsiteId} addComment={addComment} />
+  );
+}
+*/
 class CommentForm extends Component {
   constructor(props) {
     super(props);
@@ -31,17 +76,22 @@ class CommentForm extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
+  /*
   handleSubmit(values) {
     console.log("Current state is: " + JSON.stringify(values));
     alert("Current state is: " + JSON.stringify(values));
   }
-
+  */
   toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     });
   };
+
+  handleSubmit(values) {
+    this.toggleModal();
+    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+  }
 
   render() {
     return (
@@ -117,59 +167,59 @@ class CommentForm extends Component {
   }
 }
 
-class CampsiteInfo extends Component {
-  renderCampsite(campsite) {
+function CampsiteInfo(props) {
+  if (props.campsite) {
     return (
-      <div className="col-md-5 m-1">
-        <Card>
-          <CardImg top src={campsite.image} alt={campsite.name} />
-          <CardBody>
-            <CardTitle>{campsite.name}</CardTitle>
-            <CardText>{campsite.description}</CardText>
-          </CardBody>
-        </Card>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <Link to="/directory">directory</Link>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            <h2>{props.campsite.name}</h2>
+            <hr />
+          </div>
+          <div className="row">
+              <RenderCampsite campsite={props.campsite} />
+              <RenderComments 
+                  comments={props.comments}
+                  addComment={props.addComment}
+                  campsiteId={props.campsite.id}
+              />
+          </div>
+        </div>
       </div>
     );
   }
-
-  renderComments(comments) {
-    if (comments) {
-      return (
-        <div className="col-md-5 m-1">
-          <h4>Comments</h4>
-          {comments.map(comment => (
-            <div key={comment.id}>
-              "<b>{comment.text}</b>"
-              <p>
-                -- <i>{comment.author}</i>,{" "}
-                {new Intl.DateTimeFormat("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "2-digit"
-                }).format(new Date(Date.parse(comment.date)))}
-              </p>
-            </div>
-          ))}
-
-          <CommentForm />
-        </div>
-      );
-    }
-  }
-
+  return <div />;
+}
+/*
+class CampsiteInfo extends Component {
   render() {
-    if (this.props.campsite) {
-      return (
-        <div className="container">
-          <div className="row">
-            {this.renderCampsite(this.props.campsite)}
-            {this.renderComments(this.props.comments)}
-          </div>
-        </div>
-      );
-    }
-    return <div />;
+    
   }
 }
-
+*/
 export default CampsiteInfo;
+/*
+render() {
+  if (this.props.campsite) {
+    return (
+      <div className="container">
+        <div className="row">
+          {this.renderCampsite(this.props.campsite)}
+          {this.renderComments(this.props.comments)}
+          <RenderComments 
+              comments={props.comments}
+              addComment={props.addComment}
+              campsiteId={props.campsite.id}
+          />
+        </div>
+      </div>
+    );
+  }
+  return <div />;
+}
+*/
