@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || val.length <= len;
@@ -25,13 +26,18 @@ const minLength = len => val => val && val.length >= len;
 function RenderCampsite({campsite}) {
   return (
     <div className="col-md-5 m-1">
-      <Card>
-        <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
-        <CardBody>
-          <CardTitle>{campsite.name}</CardTitle>
-          <CardText>{campsite.description}</CardText>
-        </CardBody>
-      </Card>
+        <FadeTransform
+            in
+            transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
+            <Card>
+                <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
+                <CardBody>
+                    <CardText>{campsite.description}</CardText>
+                </CardBody>
+            </Card>
+        </FadeTransform>
     </div>
   );
 }
@@ -41,33 +47,26 @@ function RenderComments({comments, postComment, campsiteId}) {
     return (
       <div className="col-md-5 m-1">
         <h4>Comments</h4>
-        {comments.map(comment => (
-          <div key={comment.id}>
-            "<b>{comment.text}</b>"
-            <p>
-              -- <i>{comment.author}</i>,{" "}
-              {new Intl.DateTimeFormat("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit"
-              }).format(new Date(Date.parse(comment.date)))}
-            </p>
-          </div>
-        ))}
-
+        <Stagger in>
+            {comments.map(comment => {
+                return (
+                    <Fade in key={comment.id}>
+                        <div>
+                            <p>{comment.text}<br />
+                                -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
+                            </p>
+                        </div>
+                    </Fade>
+                );
+            })}
+        </Stagger>
         <CommentForm campsiteId={campsiteId} postComment={postComment} />
       </div>
     );
   }
   return <div />;
 }
-/*
-function RenderComments({comments}) {
-  return (
-    <CommentForm campsiteId={campsiteId} addComment={addComment} />
-  );
-}
-*/
+
 class CommentForm extends Component {
   constructor(props) {
     super(props);
@@ -79,12 +78,7 @@ class CommentForm extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  /*
-  handleSubmit(values) {
-    console.log("Current state is: " + JSON.stringify(values));
-    alert("Current state is: " + JSON.stringify(values));
-  }
-  */
+
   toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
@@ -93,7 +87,6 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     this.toggleModal();
-    //this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
     this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
   }
 
@@ -209,7 +202,6 @@ function CampsiteInfo(props) {
               <RenderCampsite campsite={props.campsite} />
               <RenderComments 
                   comments={props.comments}
-                  //addComment={props.addComment}
                   postComment={props.postComment}
                   campsiteId={props.campsite.id}
               />
@@ -220,31 +212,5 @@ function CampsiteInfo(props) {
   }
   return <div />;
 }
-/*
-class CampsiteInfo extends Component {
-  render() {
-    
-  }
-}
-*/
+
 export default CampsiteInfo;
-/*
-render() {
-  if (this.props.campsite) {
-    return (
-      <div className="container">
-        <div className="row">
-          {this.renderCampsite(this.props.campsite)}
-          {this.renderComments(this.props.comments)}
-          <RenderComments 
-              comments={props.comments}
-              addComment={props.addComment}
-              campsiteId={props.campsite.id}
-          />
-        </div>
-      </div>
-    );
-  }
-  return <div />;
-}
-*/
