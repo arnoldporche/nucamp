@@ -4,7 +4,7 @@ export const COMMENTS =
         id: 0,
         campsiteId: 0,
         rating: 5, 
-        text: "What a magnificent view!",
+        text: "l-What a magnificent view",
         author: "Tinus Lorvaldes",
         date: "2018-10-25T16:30Z"
     },
@@ -76,7 +76,7 @@ export const COMMENTS =
         id: 9,
         campsiteId: 1,
         rating: 5, 
-        text: "What a magnificent view!",
+        text: "lWhat a magnificent view!",
         author: "Tinus Lorvaldes",
         date: "2018-10-25T16:30Z"
     },
@@ -108,7 +108,7 @@ export const COMMENTS =
         id: 13,
         campsiteId: 2,
         rating: 5, 
-        text: "What a magnificent view!",
+        text: "l-What a magnificent view!!",
         author: "Tinus Lorvaldes",
         date: "2018-10-25T16:30Z"
     },
@@ -140,7 +140,7 @@ export const COMMENTS =
         id: 17,
         campsiteId: 3,
         rating: 5, 
-        text: "What a magnificent view!",
+        text: "l-What a magnificent view!!!",
         author: "Tinus Lorvaldes",
         date: "2018-10-25T16:30Z"
     },
