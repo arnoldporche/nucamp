@@ -22,6 +22,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", function(req, res) {
+  // Cookies that have not been signed
+  console.log("Cookies: ", req.cookies);
+
+  // Cookies that have been signed
+  console.log("Signed Cookies: ", req.signedCookies);
+});
+
+app.listen(8080);
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/campsites", campsiteRouter);
