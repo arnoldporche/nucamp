@@ -1,5 +1,5 @@
 const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert").strict;
+//const assert = require("assert").strict;
 const dboper = require("./operations");
 
 const url = "mongodb://localhost:27017/";
