@@ -34,4 +34,13 @@ exports.jwtPassport = passport.use(
   })
 );
 
+const verifyAdmin = (req, res, next) => {
+  if (req.user.admin == true) {
+    next();
+  } else {
+    throw new Error("uh-oh");
+  }
+};
+
 exports.verifyUser = passport.authenticate("jwt", { session: false });
+module.exports.verifyAdmin = verifyAdmin;
